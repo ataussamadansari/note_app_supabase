@@ -54,6 +54,7 @@ This project demonstrates authentication, CRUD operations, like system, profile 
 
 ### 📂 Folder Structure
 
+```agsl
 lib/
 │
 ├── core/
@@ -91,7 +92,7 @@ lib/
 │ └── create_edit_note_screen.dart
 │
 └── main.dart
-
+```
 
 ---
 
