@@ -144,9 +144,10 @@ RLS is enabled on all tables.
 
 Create a `.env` file in project root:
 
+```agsl
 SUPABASE=your_supabase_url
 SUPABASE_ANON_KEY=your_supabase_anon_key
-
+```
 
 ---
 
