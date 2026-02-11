@@ -1,8 +1,8 @@
 # 📒 Notes App (Flutter + Supabase + GetX)
 
-A production-ready Notes Application built with **Flutter**, **Supabase**, and **GetX** using clean architecture principles.
+A production-ready Notes Application built with **Flutter**, **Supabase**, and **GetX**, following clean architecture and scalable backend design principles.
 
-This app demonstrates authentication, CRUD operations, like system, profile management, and secure backend policies.
+This project demonstrates authentication, CRUD operations, like system, profile management, relational database handling, secure RLS policies, and proper state management.
 
 ---
 
@@ -11,35 +11,151 @@ This app demonstrates authentication, CRUD operations, like system, profile mana
 ### 🔐 Authentication
 - User Signup
 - User Login
-- Logout
-- Session Handling
-- Secure Auth Flow (Supabase)
+- Secure Logout
+- Session Persistence
+- Auth State Handling
+- Protected Navigation Flow
 
 ### 📝 Notes System
 - Create Note
 - Edit Note
 - Delete Note
-- View All Notes (Feed)
-- View My Notes (Profile)
-- Auto Notes Count (DB Trigger)
+- Public Notes Feed
+- My Notes View (Profile)
+- Automatic `notes_count` via DB Trigger
 
 ### ❤️ Like System
 - One user can like a note only once
-- Like / Unlike toggle
-- Like counter maintained via database trigger
-- Foreign key with `ON DELETE CASCADE`
-- No duplicate likes (Unique constraint)
+- Toggle Like / Unlike
+- `UNIQUE(user_id, note_id)` constraint
+- Like count maintained via trigger
+- `ON DELETE CASCADE` for clean relational deletion
+- Optimistic UI updates
 
-### 👤 Profile Screen
-- User name & email
-- Notes count
-- Total likes received
-- My notes list
-- Logout (Cupertino dialog support)
+### 👤 Profile
+- User Name
+- Email
+- Notes Count
+- Total Likes Received
+- My Notes List
+- Cupertino-style Logout Dialog
 
 ---
 
 ## 🏗 Architecture
 
-This project follows a layered clean architecture:
+This project follows layered clean architecture:
 
+UI
+↓
+Controller (GetX)
+↓
+Repository
+↓
+Provider (Supabase Calls)
+↓
+Database (PostgreSQL)
+
+
+### 📂 Folder Structure
+
+lib/
+│
+├── core/
+│ └── supabase_constant.dart
+│
+├── data/
+│ ├── models/
+│ │ ├── user_model.dart
+│ │ └── note_model.dart
+│ │
+│ ├── providers/
+│ │ ├── auth_provider.dart
+│ │ ├── note_provider.dart
+│ │ ├── profile_provider.dart
+│ │ └── like_provider.dart
+│ │
+│ └── repositories/
+│ ├── auth_repository.dart
+│ ├── note_repository.dart
+│ ├── profile_repository.dart
+│ └── like_repository.dart
+│
+├── controllers/
+│ ├── auth_controller.dart
+│ ├── note_controller.dart
+│ ├── profile_controller.dart
+│ └── like_controller.dart
+│
+├── ui/
+│ ├── splash_screen.dart
+│ ├── login_screen.dart
+│ ├── signup_screen.dart
+│ ├── home_screen.dart
+│ ├── profile_screen.dart
+│ └── create_edit_note_screen.dart
+│
+└── main.dart
+
+
+---
+
+## 🗄 Database Design
+
+### 🧑 users
+- id (uuid, primary key)
+- name
+- email
+- notes_count (int8)
+
+### 📝 notes
+- id
+- user_id (FK → users.id)
+- title
+- description
+- like_count (int4)
+
+### ❤️ likes
+- id
+- user_id (FK → users.id)
+- note_id (FK → notes.id)
+- UNIQUE(user_id, note_id)
+- ON DELETE CASCADE
+
+---
+
+## 🛡 Security (Row Level Security - RLS)
+
+RLS is enabled on all tables.
+
+### Users
+- Users can update only their own profile
+- Users can view authenticated users
+
+### Notes
+- Users can insert only their own notes
+- Users can update/delete only their own notes
+- Notes visible to authenticated users
+
+### Likes
+- Users can like only using their own user_id
+- Users can unlike only their own likes
+- Duplicate likes prevented via UNIQUE constraint
+
+---
+
+## ⚙️ Environment Setup
+
+Create a `.env` file in project root:
+
+SUPABASE=your_supabase_url
+SUPABASE_ANON_KEY=your_supabase_anon_key
+
+
+---
+
+## ▶️ Run Project
+
+```bash
+flutter pub get
+flutter run
