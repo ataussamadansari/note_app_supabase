@@ -42,19 +42,14 @@ This project demonstrates authentication, CRUD operations, like system, profile 
 
 ---
 
-## 🏗 Architecture
+### 🔹 Architecture Layers
 
-This project follows layered clean architecture:
+- **UI Layer** → Screens & Widgets
+- **Controller Layer** → GetX State Management
+- **Repository Layer** → Business Logic
+- **Provider Layer** → Supabase Database Calls
+- **Database Layer** → PostgreSQL (Supabase)
 
-UI
-↓
-Controller (GetX)
-↓
-Repository
-↓
-Provider (Supabase Calls)
-↓
-Database (PostgreSQL)
 
 
 ### 📂 Folder Structure
